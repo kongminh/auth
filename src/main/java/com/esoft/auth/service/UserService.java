@@ -2,7 +2,7 @@ package com.esoft.auth.service;
 
 import com.esoft.auth.model.User;
 import org.springframework.stereotype.Service;
-import com.esoft.auth.service.PrimaryBaseService;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.esoft.security;
+package com.esoft.auth.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

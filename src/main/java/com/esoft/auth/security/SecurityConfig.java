@@ -1,4 +1,4 @@
-package com.esoft.security;
+package com.esoft.auth.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +26,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 //@EnableWebMvc
-@EnableGlobalMethodSecurity(securedEnabled = false, prePostEnabled = false)
 public class SecurityConfig {
 
   @Bean
@@ -51,18 +50,17 @@ public class SecurityConfig {
         authorizeRequests
             .anyRequest().permitAll()
     );
-
     return http.build();
   }
 
-  @Bean
-  public WebSecurityCustomizer webSecurityCustomizer() {
-    return (web) -> web.ignoring()
-        .requestMatchers(
-            "/swagger-ui/**",
-            "/swagger-resources/**",
-            "/v2/api-docs/**");
-  }
+//  @Bean
+//  public WebSecurityCustomizer webSecurityCustomizer() {
+//    return (web) -> web.ignoring()
+//        .antMatchers("/v2/api-docs/**")
+//        .antMatchers("/swagger.json")
+//        .antMatchers("/swagger-ui.html")
+//        .antMatchers("/swagger-resources/**");
+//  }
 
 //  @Override
 //  public void addResourceHandlers(ResourceHandlerRegistry registry) {

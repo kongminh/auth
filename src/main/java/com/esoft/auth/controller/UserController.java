@@ -1,4 +1,4 @@
-package com.esoft.auth.controllers;
+package com.esoft.auth.controller;
 
 import com.esoft.auth.model.User;
 import com.esoft.auth.service.UserService;

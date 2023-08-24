@@ -14,8 +14,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 @Configuration
 @EnableTransactionManagement
@@ -84,24 +86,24 @@ public class DataSourcePrimaryConfig {
 
   private Properties additionalJpaProperties(Environment env) {
     Properties properties = new Properties();
-    properties.setProperty("hibernate.transaction.jta.platform", "");
-    properties.setProperty(
-        "hibernate.id.new_generator_mappings",
-        getValue(env, "spring.jpa.hibernate.id.new_generator_mappings"));
-    properties.setProperty(
-        "hibernate.physical_naming_strategy",
-        getValue(env, "spring.jpa.hibernate.physical_naming_strategy"));
-    properties.setProperty(
-        "hibernate.implicit_naming_strategy",
-        getValue(env, "spring.jpa.hibernate.implicit_naming_strategy"));
-    properties.setProperty(
-        "hibernate.connection.handling_mode",
-        getValue(env, "spring.jpa.hibernate.connection.handling_mode"));
-    properties.setProperty(
-        "hibernate.hbm2ddl.auto", getValue(env, "spring.jpa.hibernate.ddl-auto"));
-    properties.setProperty(
-        "hibernate.jdbc.lob.non_contextual_creation",
-        getValue(env, "spring.jpa.hibernate.jdbc.lob.non_contextual_creation"));
+//    properties.setProperty("hibernate.transaction.jta.platform", "");
+//    properties.setProperty(
+//        "hibernate.id.new_generator_mappings",
+//        getValue(env, "spring.jpa.hibernate.id.new_generator_mappings"));
+//    properties.setProperty(
+//        "hibernate.physical_naming_strategy",
+//        getValue(env, "spring.jpa.hibernate.physical_naming_strategy"));
+//    properties.setProperty(
+//        "hibernate.implicit_naming_strategy",
+//        getValue(env, "spring.jpa.hibernate.implicit_naming_strategy"));
+//    properties.setProperty(
+//        "hibernate.connection.handling_mode",
+//        getValue(env, "spring.jpa.hibernate.connection.handling_mode"));
+//    properties.setProperty(
+//        "hibernate.hbm2ddl.auto", getValue(env, "spring.jpa.hibernate.ddl-auto"));
+//    properties.setProperty(
+//        "hibernate.jdbc.lob.non_contextual_creation",
+//        getValue(env, "spring.jpa.hibernate.jdbc.lob.non_contextual_creation"));
     properties.setProperty("hibernate.dialect", getValue(env, "spring.jpa.hibernate.dialect"));
     properties.setProperty("hibernate.show_sql", getValue(env, "spring.jpa.hibernate.show_sql"));
 
