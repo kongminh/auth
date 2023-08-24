@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 //import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 //import springfox.documentation.builders.ApiInfoBuilder;
 //import springfox.documentation.builders.PathSelectors;
@@ -25,7 +26,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 
 @Configuration
-//@EnableWebMvc
 public class SecurityConfig {
 
   @Bean
@@ -46,28 +46,20 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeRequests(authorizeRequests ->
-        authorizeRequests
-            .anyRequest().permitAll()
-    );
+//    http.authorizeRequests(authorizeRequests ->
+//        authorizeRequests
+//            .anyRequest().permitAll()
+//    );
+    http.authorizeRequests()
+            .antMatchers(
+              "/",
+              "/v3/api-docs/**",
+              "/swagger-ui/**",
+              "/swagger-resources/**")
+            .permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .httpBasic();
     return http.build();
   }
-
-//  @Bean
-//  public WebSecurityCustomizer webSecurityCustomizer() {
-//    return (web) -> web.ignoring()
-//        .antMatchers("/v2/api-docs/**")
-//        .antMatchers("/swagger.json")
-//        .antMatchers("/swagger-ui.html")
-//        .antMatchers("/swagger-resources/**");
-//  }
-
-//  @Override
-//  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//    registry.addResourceHandler("swagger-ui.html")
-//        .addResourceLocations("classpath:/META-INF/resources/");
-//
-//    registry.addResourceHandler("/webjars/**")
-//        .addResourceLocations("classpath:/META-INF/resources/webjars/");
-//  }
 }
