@@ -1,6 +1,6 @@
 package com.esoft.auth.service;
 
-import com.esoft.auth.model.User;
+import com.esoft.auth.model.UserDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -9,9 +9,9 @@ import java.util.Map;
 @Service
 public class UserService extends PrimaryBaseService {
 
-  private final Map<String, User> userDatabase = new HashMap<>();
+  private final Map<String, UserDTO> userDatabase = new HashMap<>();
 
-  public void registerUser(User user) {
+  public void registerUser(UserDTO user) {
     // Here, you can implement the logic to save the user to the database
     // You might want to hash the password before saving it
     // Example: save the user to an in-memory map (for demonstration purposes)
