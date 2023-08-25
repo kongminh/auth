@@ -1,9 +1,11 @@
 package com.esoft.auth.security.jwt;
 
+import com.esoft.auth.security.EsoftAuthenticationManager;
 import com.esoft.auth.security.JwtTokenProvider;
 import com.esoft.auth.security.model.LoginReq;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,14 +23,16 @@ import java.io.IOException;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-
-    protected UserDetailsService userDetailsService;
+    protected final UserDetailsService userDetailsService;
+    protected final JwtTokenProvider jwtTokenProvider;
 
     public JwtAuthenticationFilter(
             AuthenticationManager authenticationManager,
-            UserDetailsService userDetailsService) {
+            UserDetailsService userDetailsService,
+            JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -61,4 +65,38 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
         return null;
     }
+
+    @Override
+    protected void successfulAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain,
+            Authentication authentication) throws IOException, ServletException {
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        //        filterChain.doFilter(request, response);
+        response.setContentType("application/json");
+//        response.getWriter().write("{\"token\": \"" + token + "\"}");
+        response.addHeader("Authorization", token);
+
+        response.setStatus(HttpStatus.OK.value());
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(
+            HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
+            throws IOException, ServletException {
+        SecurityContextHolder.clearContext();
+//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+//        response.addHeader("Content-Type", "application/json;charset=UTF-8");
+//        ResponseBody body =
+//                ResponseBody.of(
+//                        request,
+//                        InternationalizationMessage.getString("error.login_fail"),
+//                        HttpStatus.UNAUTHORIZED);
+//        response.getWriter().println(JsonUtils.toJson(body));
+//        log.info(InternationalizationMessage.getString("error.login_fail"));
+    }
+
 }

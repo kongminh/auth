@@ -36,8 +36,11 @@ import com.esoft.auth.model.UserDTO.UserRole;
 @Service
 public class EsoftUserDetailsService implements UserDetailsService {
 
-    @Autowired private UserRepository userRepository;
-//    @Autowired private ConstantProperties constantProperties;
+    private final UserRepository userRepository;
+
+    public EsoftUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

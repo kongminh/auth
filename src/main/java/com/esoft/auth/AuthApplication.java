@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "Esoft API", version = "1.0", description = "Esoft Authentication Provider"))
-@SecurityScheme(name = "esoft-api", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
+@SecurityScheme(name = "esoft-api", scheme = "bearer", type = SecuritySchemeType.HTTP, bearerFormat = "JWT")
 public class AuthApplication {
 
 	public static void main(String[] args) {

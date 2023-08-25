@@ -18,11 +18,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/user")
 public class UserController {
 
-  @Autowired
-  private UserRepository userRepository;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+  }
 
   @GetMapping
   @SecurityRequirement(name = "esoft-api")

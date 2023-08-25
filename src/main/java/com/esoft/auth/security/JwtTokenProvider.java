@@ -3,6 +3,8 @@ package com.esoft.auth.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -10,7 +12,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -22,9 +27,10 @@ public class JwtTokenProvider {
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    private EsoftUserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
+    private SecretKey key;
 
-    public JwtTokenProvider(EsoftUserDetailsService userDetailsService) {
+    public JwtTokenProvider(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
@@ -32,15 +38,17 @@ public class JwtTokenProvider {
         UserDetails user = (UserDetails) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
-
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("username", user.getUsername());
+        if (key == null) {
+            byte[] keyBytes = Decoders.BASE64.decode(this.jwtSecret);
+            key = Keys.hmacShaKeyFor(keyBytes);
+        }
 
         return Jwts.builder()
                 .setSubject(user.getUsername())
+                .claim("AUTH", user.getAuthorities())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(key)
                 .compact();
     }
 
