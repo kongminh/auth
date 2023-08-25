@@ -3,6 +3,7 @@ package com.esoft.auth.controller;
 import com.esoft.auth.entity.UserEntity;
 import com.esoft.auth.model.UserDTO;
 import com.esoft.auth.repository.UserRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public class UserController {
   private PasswordEncoder passwordEncoder;
 
   @GetMapping
+  @SecurityRequirement(name = "esoft-api")
   public List<UserDTO> getAllUsers() {
     return userRepository.findAll().stream()
             .map(user -> new UserDTO(user.getUsername(), user.getRole(), user.getPermissions()))
