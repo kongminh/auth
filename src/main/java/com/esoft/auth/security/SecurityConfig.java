@@ -34,24 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return new EsoftAuthenticationProvider(userDetailsService, passwordEncoder());
   }
 
-//  @Bean
-//  public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-//    return new JwtAuthenticationFilter(authenticationManager(), userDetailsService);
-//  }
-
-//  @Bean
-//  public DaoAuthenticationProvider authenticationProvider() {
-//    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//    authenticationProvider.setUserDetailsService(userDetailsService);
-//    authenticationProvider.setPasswordEncoder(passwordEncoder());
-//    return authenticationProvider;
-//  }
-
-//  @Bean
-//  public AuthenticationManager authenticationManager(@Qualifier("authenticationProvider") AuthenticationProvider authenticationProvider) {
-//    return new EsoftAuthenticationManager(authenticationProvider);
-//  }
-
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     auth.authenticationProvider(authenticationProvider());

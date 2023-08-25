@@ -23,8 +23,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private JwtTokenProvider tokenProvider;
 
-    private UserDetailsService userDetailsService;
-
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
         super(authenticationManager);
         this.tokenProvider = tokenProvider;
@@ -34,14 +32,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(
             HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
-//        String token = tokenProvider.resolveToken(req);
-//
-//        if (token != null && tokenProvider.validateToken(token)) {
-////            Authentication auth = tokenProvider.getAuthentication(token);
-////            if (auth != null) {
-////                SecurityContextHolder.getContext().setAuthentication(auth);
-////            }
-//        }
+        String token = tokenProvider.resolveToken(req);
+
+        if (token != null && tokenProvider.validateToken(token)) {
+            Authentication auth = tokenProvider.getAuthentication(token);
+            if (auth != null) {
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        }
 
         chain.doFilter(req, res);
     }
