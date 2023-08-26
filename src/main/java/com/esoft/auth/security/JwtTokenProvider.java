@@ -35,7 +35,7 @@ public class JwtTokenProvider {
     }
 
     public String generateToken(Authentication authentication) {
-        UserDetails user = (UserDetails) authentication.getPrincipal();
+//        UserDetails user = (UserDetails) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
         if (keyAccessToken == null) {
@@ -44,8 +44,8 @@ public class JwtTokenProvider {
         }
 
         return Jwts.builder()
-                .setSubject(user.getUsername())
-                .claim("AUTH", user.getAuthorities())
+                .setSubject(authentication.getName())
+                .claim("AUTH", authentication.getAuthorities())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(keyAccessToken)

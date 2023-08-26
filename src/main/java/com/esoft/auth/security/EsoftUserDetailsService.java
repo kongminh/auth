@@ -43,28 +43,12 @@ public class EsoftUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user =
                 userRepository
-                        .findByUsername(email)
+                        .findByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("Username not found."));
         return new LoginUserDetails(user, new HashSet<>());
-    }
-
-    public LoginUserDetails loadUserById(String loginId, String userRole)
-            throws UsernameNotFoundException {
-        Optional<UserEntity> userOpt = userRepository.findByUsername(loginId);
-        if (!userOpt.isPresent()) {
-            throw new UsernameNotFoundException("Account not found.");
-        }
-
-        if (!userOpt.isEmpty()) {
-            UserEntity user = userOpt.get();
-            if (user.getRole() == UserRole.USER.name()) {
-                return new LoginUserDetails(user, new HashSet<>());
-            }
-        }
-        return null;
     }
 
     /**
@@ -73,9 +57,9 @@ public class EsoftUserDetailsService implements UserDetailsService {
      * @return Collection-GrantedAuthority
      * @throws UsernameNotFoundException throws exeption
      */
-    public Collection<GrantedAuthority> getAuthorities(String loginId, String userRole)
+    public Collection<GrantedAuthority> getAuthorities(String username)
             throws UsernameNotFoundException {
-        Optional<UserEntity> userOpt = userRepository.findByUsername(loginId);
+        Optional<UserEntity> userOpt = userRepository.findByUsername(username);
 
         if (!userOpt.isPresent()) {
             throw new UsernameNotFoundException("Account not found.");
@@ -84,28 +68,10 @@ public class EsoftUserDetailsService implements UserDetailsService {
         HashSet<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
         if (!userOpt.isEmpty()) {
             UserEntity user = userOpt.get();
-            if (user.getRole() == UserRole.USER.name()) {
-                authorities.add(new SimpleGrantedAuthority(user.getRole()));
-                authorities.add(new SimpleGrantedAuthority(user.getPermissions()));
-                return authorities;
-            }
+            authorities.add(new SimpleGrantedAuthority(user.getRole()));
+            authorities.add(new SimpleGrantedAuthority(user.getPermissions()));
+            return authorities;
         }
         return authorities;
     }
-
-//    public boolean checkTokenPortal(String token) throws UsernameNotFoundException {
-//        try {
-//            Claims claims =
-//                    Jwts.parser()
-//                            .setSigningKey(
-//                                    constantProperties
-//                                            .getString("secretKeyPortal")
-//                                            .getBytes(Charset.forName("UTF-8")))
-//                            .parseClaimsJws(token)
-//                            .getBody();
-//            return true;
-//        } catch (RuntimeException e) {
-//            return false;
-//        }
-//    }
 }

@@ -1,34 +1,55 @@
 package com.esoft.auth.service;
 
+import com.esoft.auth.entity.UserEntity;
 import com.esoft.auth.model.UserDTO;
+import com.esoft.auth.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class UserService extends PrimaryBaseService {
 
-  private final Map<String, UserDTO> userDatabase = new HashMap<>();
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
-  public void registerUser(UserDTO user) {
-    // Here, you can implement the logic to save the user to the database
-    // You might want to hash the password before saving it
-    // Example: save the user to an in-memory map (for demonstration purposes)
-
-    // Hash the password (you should use a secure hashing algorithm in production)
-    String hashedPassword = hashPassword(user.getPassword());
-
-    // Update the user's password with the hashed version
-    user.setPassword(hashedPassword);
-
-    // Save the user to the in-memory database
-    userDatabase.put(user.getUsername(), user);
+  @Autowired
+  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
-  private String hashPassword(String password) {
-    // Replace this with your actual password hashing implementation
-    // For security, use a strong and proven hashing algorithm like BCrypt
-    return password; // For demonstration purposes, we're using the original password as the "hashed" password
+  public boolean createUser(UserDTO userDto) {
+    if (userRepository.existsByUsername(userDto.getUsername())) {
+      return false;
+    }
+    UserEntity userEntity = new UserEntity();
+    userEntity.setUsername(userDto.getUsername());
+    userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
+    userEntity.setRole(userDto.getRole());
+    userEntity.setPermissions(userDto.getPermissions());
+    userRepository.save(userEntity);
+    return true;
+  }
+
+  public boolean updateUser(Long userId, UserDTO userDto) {
+    if (userRepository.existsById(userId)) {
+      UserEntity userEntity = new UserEntity();
+      userEntity.setId(userId);
+//      userEntity.setUsername(userDto.getUsername());
+//      userEntity.setPassword(userDto.getPassword());
+      userEntity.setRole(userDto.getRole());
+      userEntity.setPermissions(userDto.getPermissions());
+      userRepository.save(userEntity);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public void deleteUsers(List<Long> userIds) {
+    userRepository.deleteAllById(userIds);
   }
 }

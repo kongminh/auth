@@ -1,6 +1,7 @@
 package com.esoft.auth.security.jwt;
 
 import com.esoft.auth.security.JwtTokenProvider;
+import com.esoft.auth.service.TokenBlacklistService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -13,11 +14,15 @@ import java.io.IOException;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private JwtTokenProvider tokenProvider;
+    private final JwtTokenProvider tokenProvider;
+    private final TokenBlacklistService tokenBlacklistService;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtTokenProvider tokenProvider) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
+                                  JwtTokenProvider tokenProvider,
+                                  TokenBlacklistService tokenBlacklistService) {
         super(authenticationManager);
         this.tokenProvider = tokenProvider;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     @Override
@@ -25,6 +30,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
         String token = tokenProvider.resolveToken(req);
+        if(tokenBlacklistService.isTokenBlacklisted(token)) {
+            chain.doFilter(req, res);
+        }
 
         if (token != null && tokenProvider.validateToken(token)) {
             Authentication auth = tokenProvider.getAuthentication(token);

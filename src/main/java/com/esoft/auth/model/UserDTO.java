@@ -11,12 +11,12 @@ public class UserDTO {
   @Schema(example = "123456")
   private String password;
 
-  private String role = UserRole.USER.name();
+  private String role = UserRole.ROLE_USER.name();
   private String permissions = UserPermission.WRITE.name();
 
   public enum UserRole {
-    USER,
-    ADMIN
+    ROLE_USER,
+    ROLE_ADMIN
   }
 
   public enum UserPermission {

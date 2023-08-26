@@ -4,6 +4,7 @@ import com.esoft.auth.entity.UserEntity;
 import com.esoft.auth.model.UserDTO;
 import com.esoft.auth.repository.UserRepository;
 import com.esoft.auth.security.JwtTokenProvider;
+import com.esoft.auth.service.TokenBlacklistService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -26,15 +29,18 @@ public class AuthController {
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
   private final UserDetailsService userDetailsService;
+  private final TokenBlacklistService tokenBlacklistService;
 
   public AuthController(UserRepository userRepository,
                         PasswordEncoder passwordEncoder,
                         JwtTokenProvider jwtTokenProvider,
-                        UserDetailsService userDetailsService) {
+                        UserDetailsService userDetailsService,
+                        TokenBlacklistService tokenBlacklistService) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.jwtTokenProvider = jwtTokenProvider;
     this.userDetailsService = userDetailsService;
+    this.tokenBlacklistService = tokenBlacklistService;
   }
 
   @GetMapping("authorize-data")
@@ -43,6 +49,19 @@ public class AuthController {
     return userRepository.findAll().stream()
             .map(user -> new UserDTO(user.getUsername(), user.getRole(), user.getPermissions()))
             .collect(Collectors.toList());
+  }
+
+  @PostMapping("disable")
+  @SecurityRequirement(name = "esoft-api")
+  public ResponseEntity<String> disableToken(HttpServletRequest request) {
+    String authorizationHeader = request.getHeader("Authorization");
+    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+      String token = authorizationHeader.substring(7); // Extract token part
+      tokenBlacklistService.blacklistToken(token);
+      return ResponseEntity.ok("Token disabled");
+    } else {
+      return ResponseEntity.badRequest().body("Invalid or missing Bearer token");
+    }
   }
 
   @GetMapping

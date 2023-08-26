@@ -2,12 +2,14 @@ package com.esoft.auth.security.jwt;
 
 import com.esoft.auth.security.JwtTokenProvider;
 import com.esoft.auth.security.model.LoginReq;
+import com.esoft.auth.security.model.LoginUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -18,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
@@ -72,6 +75,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication authentication) throws IOException, ServletException {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
+//        Optional<GrantedAuthority> userRole =
+//                (Optional<GrantedAuthority>)authentication.getAuthorities()
+//                        .stream()
+//                        .filter(grantedAuthority -> grantedAuthority.getAuthority().contains("ROLE_"))
+//                        .findFirst();
+
         String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
         response.setContentType("application/json");
