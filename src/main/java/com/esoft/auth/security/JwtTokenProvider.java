@@ -20,12 +20,16 @@ import java.util.*;
 public class JwtTokenProvider {
     @Value("${app.jwtSecret}")
     private String jwtSecret;
+
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
+
     @Value("${app.jwtRefreshSecret}")
     private String jwtRefreshSecret;
-    @Value("${jwt.refreshExpiration}")
-    private int jwtRefreshExpiration;
+
+    @Value("${app.refreshExpirationMs}")
+    private int jwtRefreshExpirationMs;
+
     private SecretKey keyAccessToken;
     private SecretKey keyRefreshToken;
     private final UserDetailsService userDetailsService;
@@ -55,7 +59,7 @@ public class JwtTokenProvider {
     public String generateRefreshToken(Authentication authentication) {
         UserDetails user = (UserDetails) authentication.getPrincipal();
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtRefreshExpiration);
+        Date expiryDate = new Date(now.getTime() + jwtRefreshExpirationMs);
         if (keyRefreshToken == null) {
             byte[] keyBytes = Decoders.BASE64.decode(this.jwtRefreshSecret);
             keyRefreshToken = Keys.hmacShaKeyFor(keyBytes);

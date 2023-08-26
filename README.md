@@ -16,11 +16,15 @@
 #### spring.datasource.primary.password=esoftdb
 #### spring.datasource.primary.driver-class-name=com.mysql.cj.jdbc.Driver
 
-
 ### Redis Configuration
 #### spring.redis.host=localhost
 ####  spring.redis.port=6379
 
+## JWT Configuration
+#### app.jwtSecret  => secret key for jwt access token
+#### app.jwtExpirationMs => expire time for access token
+#### app.jwtRefreshSecret   => secret key for jwt refresh token
+#### app.refreshExpirationMs => expire time for refresh token
 
 ### Springdoc Configuration (Open API)
 #### springdoc.show-login-endpoint=true
