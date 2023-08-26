@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 public class UserService extends PrimaryBaseService {
@@ -32,6 +33,16 @@ public class UserService extends PrimaryBaseService {
     this.passwordEncoder = passwordEncoder;
     this.jwtTokenProvider = jwtTokenProvider;
     this.userDetailsService = userDetailsService;
+  }
+
+  public UserDTO getUserInfo() {
+    org.springframework.security.core.Authentication auth =
+            SecurityContextHolder.getContext().getAuthentication();
+    Optional<UserEntity> userEntityOpt = userRepository.findByUsername(auth.getName());
+    if (!userEntityOpt.isPresent()) {
+      return null;
+    }
+    return new UserDTO(userEntityOpt.get());
   }
 
   public List<UserDTO> getAllUsers() {

@@ -2,25 +2,19 @@ package com.esoft.auth.security.jwt;
 
 import com.esoft.auth.security.JwtTokenProvider;
 import com.esoft.auth.security.model.LoginReq;
-import com.esoft.auth.security.model.LoginUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
@@ -43,22 +37,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             LoginReq loginReq = new ObjectMapper().readValue(req.getInputStream(), LoginReq.class);
             if (!loginReq.getUsername().isEmpty() && !loginReq.getPassword().isEmpty()) {
-//                Authentication userAuth =
-//                        this.authenticate(
-//                                new CargoLinkAuthentication(
-//                                        loginReq.getLoginId(),
-//                                        loginReq.getPassword(),
-//                                        new ArrayList<>(),
-//                                        loginReq.getUserType(),
-//                                        loginReq.getDeviceToken(),
-//                                        loginReq.getDeviceType(),
-//                                        loginReq.getIsAdmin(),
-//                                        loginReq.isRemember()),
-//                                userDetailsService);
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(loginReq.getUsername(), loginReq.getPassword())
                 );
-//                SecurityContextHolder.getContext().setAuthentication(authentication);
                 return authentication;
             }
         } catch (IOException e) {
@@ -72,14 +53,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain,
-            Authentication authentication) throws IOException, ServletException {
+            Authentication authentication) throws IOException {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
-//        Optional<GrantedAuthority> userRole =
-//                (Optional<GrantedAuthority>)authentication.getAuthorities()
-//                        .stream()
-//                        .filter(grantedAuthority -> grantedAuthority.getAuthority().contains("ROLE_"))
-//                        .findFirst();
 
         String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
@@ -93,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(
             HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
-            throws IOException, ServletException {
+            throws IOException {
         SecurityContextHolder.clearContext();
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.addHeader("Content-Type", "application/json;charset=UTF-8");

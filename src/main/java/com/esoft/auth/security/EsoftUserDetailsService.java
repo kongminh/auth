@@ -1,28 +1,9 @@
 package com.esoft.auth.security;
 
-//import com.tmg.cargolink.application.dto.mobile.LoginShipperCompanyDetails;
-//import com.tmg.cargolink.application.dto.mobile.LoginUserDetails;
-//import com.tmg.cargolink.config.ConstantProperties;
-//import com.tmg.cargolink.domain.primary.entity.DtbUser;
-//import com.tmg.cargolink.domain.primary.enums.ApproveStatus;
-//import com.tmg.cargolink.domain.primary.enums.RoleType;
-//import com.tmg.cargolink.domain.primary.enums.RoleTypeText;
-//import com.tmg.cargolink.domain.primary.enums.UserType;
-//import com.tmg.cargolink.domain.primary.repository.AdminRepository;
-//import com.tmg.cargolink.domain.primary.repository.UserRepository;
-//import com.tmg.cargolink.domain.primary.repository.specification.AdminUserSpecification;
-//import com.tmg.cargolink.util.Helper;
 import com.esoft.auth.entity.UserEntity;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.esoft.auth.repository.UserRepository;
 import com.esoft.auth.security.model.LoginUserDetails;
-import com.esoft.auth.model.UserDTO.UserRole;
 
 @Service
 public class EsoftUserDetailsService implements UserDetailsService {
@@ -51,27 +31,18 @@ public class EsoftUserDetailsService implements UserDetailsService {
         return new LoginUserDetails(user, new HashSet<>());
     }
 
-    /**
-     * @param loginId String
-     * @param userRole String
-     * @return Collection-GrantedAuthority
-     * @throws UsernameNotFoundException throws exeption
-     */
     public Collection<GrantedAuthority> getAuthorities(String username)
             throws UsernameNotFoundException {
         Optional<UserEntity> userOpt = userRepository.findByUsername(username);
 
-        if (!userOpt.isPresent()) {
+        if (userOpt.isEmpty()) {
             throw new UsernameNotFoundException("Account not found.");
         }
 
         HashSet<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-        if (!userOpt.isEmpty()) {
-            UserEntity user = userOpt.get();
-            authorities.add(new SimpleGrantedAuthority(user.getRole()));
-            authorities.add(new SimpleGrantedAuthority(user.getPermissions()));
-            return authorities;
-        }
+        UserEntity user = userOpt.get();
+        authorities.add(new SimpleGrantedAuthority(user.getRole()));
+        authorities.add(new SimpleGrantedAuthority(user.getPermissions()));
         return authorities;
     }
 }

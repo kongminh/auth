@@ -27,8 +27,8 @@ public class AuthController {
 
   @GetMapping("authorize-data")
   @SecurityRequirement(name = "esoft-api")
-  public List<UserDTO> getAuthorizeData() {
-    return userService.getAllUsers();
+  public UserDTO getAuthorizeData() {
+    return userService.getUserInfo();
   }
 
   @PostMapping("disable")

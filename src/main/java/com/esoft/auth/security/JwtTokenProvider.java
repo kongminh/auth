@@ -28,7 +28,7 @@ public class JwtTokenProvider {
     private int jwtRefreshExpiration;
     private SecretKey keyAccessToken;
     private SecretKey keyRefreshToken;
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     public JwtTokenProvider(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
