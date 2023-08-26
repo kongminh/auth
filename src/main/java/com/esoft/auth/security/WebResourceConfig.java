@@ -12,7 +12,11 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 @Configuration
 public class WebResourceConfig implements WebMvcConfigurer {
 
-    @Autowired private ResourceProperties resourceProperties;
+    private final ResourceProperties resourceProperties;
+
+    @Autowired WebResourceConfig(ResourceProperties resourceProperties) {
+        this.resourceProperties = resourceProperties;
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

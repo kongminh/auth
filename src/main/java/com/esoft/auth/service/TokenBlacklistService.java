@@ -1,13 +1,12 @@
 package com.esoft.auth.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TokenBlacklistService {
 
-    private RedisTemplate redisTemplate;
+    private final RedisTemplate redisTemplate;
     private static final String BLACKLIST_KEY_PREFIX = "blacklist:";
 
     public TokenBlacklistService(RedisTemplate redisTemplate) {

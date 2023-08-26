@@ -36,12 +36,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  public AuthenticationProvider authenticationProvider() throws Exception {
+  public AuthenticationProvider authenticationProvider() {
     return new EsoftAuthenticationProvider(userDetailsService, passwordEncoder());
   }
 
   @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+  protected void configure(AuthenticationManagerBuilder auth) {
     auth.authenticationProvider(authenticationProvider());
   }
 

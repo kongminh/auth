@@ -1,7 +1,6 @@
 package com.esoft.auth.controller;
 
 import com.esoft.auth.model.UserDTO;
-import com.esoft.auth.repository.UserRepository;
 import com.esoft.auth.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -18,11 +16,16 @@ import java.util.List;
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public AdminController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping
+    public List<UserDTO> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @PostMapping("")

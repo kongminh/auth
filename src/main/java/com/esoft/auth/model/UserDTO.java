@@ -1,10 +1,13 @@
 package com.esoft.auth.model;
 
+import com.esoft.auth.entity.UserEntity;
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 public class UserDTO {
+  private Long id;
+
   @Schema(example = "minhvc")
   private String username;
 
@@ -28,9 +31,10 @@ public class UserDTO {
 
   }
 
-  public UserDTO(String username, String role, String permissions) {
-    this.username = username;
-    this.role = role;
-    this.permissions = permissions;
+  public UserDTO(UserEntity userEntity) {
+    this.id = userEntity.getId();
+    this.username = userEntity.getUsername();
+    this.role = userEntity.getRole();
+    this.permissions = userEntity.getPermissions();
   }
 }
