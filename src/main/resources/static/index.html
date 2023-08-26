@@ -1,31 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Login Example</title>
+    <meta http-equiv="refresh" content="0; url=/swagger-ui/index.html">
 </head>
 <body>
-<h1>Social Login Example</h1>
-
-<button id="google-login">Login with Google</button>
-<button id="facebook-login">Login with Facebook</button>
-<!-- Add more buttons for other social providers as needed -->
-
-<script>
-    // Replace with your actual redirect URIs
-    const googleRedirectUri = 'http://localhost:8080/login/oauth2/code/google';
-    const facebookRedirectUri = 'http://localhost:8080/login/oauth2/code/facebook';
-
-    const googleLoginButton = document.getElementById('google-login');
-    googleLoginButton.addEventListener('click', () => {
-        window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_GOOGLE_CLIENT_ID&redirect_uri=${googleRedirectUri}&response_type=code&scope=openid%20profile%20email`;
-    });
-
-    const facebookLoginButton = document.getElementById('facebook-login');
-    facebookLoginButton.addEventListener('click', () => {
-        window.location.href = `https://www.facebook.com/v13.0/dialog/oauth?client_id=YOUR_FACEBOOK_CLIENT_ID&redirect_uri=${facebookRedirectUri}&scope=email`;
-    });
-</script>
+<p>If you are not redirected, <a href="/swagger-ui/index.html">click here</a>.</p>
 </body>
 </html>

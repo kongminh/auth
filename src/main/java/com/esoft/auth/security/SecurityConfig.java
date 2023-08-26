@@ -52,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(
                     "/",
                     "/static/index.html",
-                    "/api/user/register",
+                    "/api/auth/register",
+                    "/api/auth/refresh",
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
                     "/swagger-resources/**").permitAll() // Allow registration without authentication

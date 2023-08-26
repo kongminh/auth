@@ -72,10 +72,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication authentication) throws IOException, ServletException {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 
         response.setContentType("application/json");
-        response.getWriter().write("{\"Authorization\": \"" + token + "\"}");
+        response.getWriter().write("{\"Authorization\": \"" + token + "\", \"Refresh-Token\": \"" + refreshToken + "\"}");
         response.addHeader("Authorization", token);
+        response.addHeader("Refresh-Token", refreshToken);
         response.setStatus(HttpStatus.OK.value());
     }
 

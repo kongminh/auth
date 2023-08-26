@@ -20,10 +20,14 @@ import java.util.*;
 public class JwtTokenProvider {
     @Value("${app.jwtSecret}")
     private String jwtSecret;
-
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
-    private SecretKey key;
+    @Value("${app.jwtRefreshSecret}")
+    private String jwtRefreshSecret;
+    @Value("${jwt.refreshExpiration}")
+    private int jwtRefreshExpiration;
+    private SecretKey keyAccessToken;
+    private SecretKey keyRefreshToken;
     private UserDetailsService userDetailsService;
 
     public JwtTokenProvider(UserDetailsService userDetailsService) {
@@ -34,9 +38,9 @@ public class JwtTokenProvider {
         UserDetails user = (UserDetails) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
-        if (key == null) {
+        if (keyAccessToken == null) {
             byte[] keyBytes = Decoders.BASE64.decode(this.jwtSecret);
-            key = Keys.hmacShaKeyFor(keyBytes);
+            keyAccessToken = Keys.hmacShaKeyFor(keyBytes);
         }
 
         return Jwts.builder()
@@ -44,13 +48,40 @@ public class JwtTokenProvider {
                 .claim("AUTH", user.getAuthorities())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(key)
+                .signWith(keyAccessToken)
+                .compact();
+    }
+
+    public String generateRefreshToken(Authentication authentication) {
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtRefreshExpiration);
+        if (keyRefreshToken == null) {
+            byte[] keyBytes = Decoders.BASE64.decode(this.jwtRefreshSecret);
+            keyRefreshToken = Keys.hmacShaKeyFor(keyBytes);
+        }
+
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .claim("AUTH", user.getAuthorities())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(keyRefreshToken)
                 .compact();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean validateRefreshToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(jwtRefreshSecret).parseClaimsJws(token);
             return true;
         } catch (Exception ex) {
             return false;
@@ -85,6 +116,15 @@ public class JwtTokenProvider {
     public String getUsernameFromToken(String token) throws RuntimeException {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
+
+    public String getUsernameFromRefreshToken(String token) throws RuntimeException {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtRefreshSecret)
                 .parseClaimsJws(token)
                 .getBody();
 
