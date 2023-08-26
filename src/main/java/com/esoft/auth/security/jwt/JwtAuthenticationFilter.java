@@ -11,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -54,7 +55,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(loginReq.getUsername(), loginReq.getPassword())
                 );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+//                SecurityContextHolder.getContext().setAuthentication(authentication);
                 return authentication;
             }
         } catch (IOException e) {
@@ -72,11 +73,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken(authentication);
 
-        //        filterChain.doFilter(request, response);
         response.setContentType("application/json");
-//        response.getWriter().write("{\"token\": \"" + token + "\"}");
+        response.getWriter().write("{\"Authorization\": \"" + token + "\"}");
         response.addHeader("Authorization", token);
-
         response.setStatus(HttpStatus.OK.value());
     }
 
@@ -85,14 +84,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
             throws IOException, ServletException {
         SecurityContextHolder.clearContext();
-//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//        response.addHeader("Content-Type", "application/json;charset=UTF-8");
-//        ResponseBody body =
-//                ResponseBody.of(
-//                        request,
-//                        InternationalizationMessage.getString("error.login_fail"),
-//                        HttpStatus.UNAUTHORIZED);
-//        response.getWriter().println(JsonUtils.toJson(body));
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.addHeader("Content-Type", "application/json;charset=UTF-8");
+        response.getWriter().println("{\"ErrorMessage\": \"Login failed\"}");
 //        log.info(InternationalizationMessage.getString("error.login_fail"));
     }
 
