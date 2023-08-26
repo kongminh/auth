@@ -36,5 +36,7 @@
 ### Service listen on 8080, able to access over URL:
 #### http://localhost:8080/
 
+## Register with role ROLE_ADMIN to create admin account can use management function
+
 ## Build:
 #### ./gradlew clean build
