@@ -1,6 +1,6 @@
 package com.esoft.auth.security;
 
-import com.esoft.auth.entity.UserEntity;
+import com.esoft.auth.entity.user.UserEntity;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;

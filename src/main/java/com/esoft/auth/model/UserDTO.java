@@ -1,6 +1,6 @@
 package com.esoft.auth.model;
 
-import com.esoft.auth.entity.UserEntity;
+import com.esoft.auth.entity.user.UserEntity;
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 

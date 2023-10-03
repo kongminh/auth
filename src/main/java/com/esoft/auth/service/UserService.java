@@ -1,6 +1,6 @@
 package com.esoft.auth.service;
 
-import com.esoft.auth.entity.UserEntity;
+import com.esoft.auth.entity.user.UserEntity;
 import com.esoft.auth.model.UserDTO;
 import com.esoft.auth.repository.UserRepository;
 import com.esoft.auth.security.JwtTokenProvider;

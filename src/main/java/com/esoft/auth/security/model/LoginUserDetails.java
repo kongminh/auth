@@ -1,8 +1,6 @@
 package com.esoft.auth.security.model;
 
-import com.esoft.auth.entity.UserEntity;
-import com.esoft.auth.model.UserDTO;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.esoft.auth.entity.user.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
