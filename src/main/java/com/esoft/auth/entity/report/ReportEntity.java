@@ -10,6 +10,12 @@ import java.util.List;
 @Entity()
 @Table(name = "report")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString(
+        callSuper = true,
+        exclude = {"userEntity", "reportPhotos"})
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class ReportEntity {
 
     @Id

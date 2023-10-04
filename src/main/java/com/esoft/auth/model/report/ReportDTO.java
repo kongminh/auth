@@ -31,10 +31,10 @@ public class ReportDTO {
         this.title = reportEntity.getTitle();
         this.content = reportEntity.getContent();
         this.type = reportEntity.getType();
-        this.reports = reportEntity
-                .getReportPhotos()
-                .stream()
-                .map(it -> new ReportPhotoDTO(it.getId(), it.getPhotoName()))
-                .collect(Collectors.toList());
+        this.reports = reportEntity.getReportPhotos() != null &&
+                !reportEntity.getReportPhotos().isEmpty() ?
+                reportEntity.getReportPhotos().stream()
+                        .map(it -> new ReportPhotoDTO(it.getId(), it.getPhotoName()))
+                        .collect(Collectors.toList()) : null;
     }
 }

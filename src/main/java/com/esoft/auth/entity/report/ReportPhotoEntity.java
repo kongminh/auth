@@ -1,16 +1,19 @@
 package com.esoft.auth.entity.report;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity()
 @Table(name = "report_photo")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString(
+        callSuper = true,
+        exclude = {"reportEntity"})
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class ReportPhotoEntity {
 
     @Id
