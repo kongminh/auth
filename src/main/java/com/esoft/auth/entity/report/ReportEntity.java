@@ -32,7 +32,9 @@ public class ReportEntity {
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
-    @OneToMany(mappedBy = "reportEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reportEntity",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
     private List<ReportPhotoEntity> reportPhotos;
 
 }

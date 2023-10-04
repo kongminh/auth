@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/report")
 @SecurityRequirement(name = "esoft-api")
@@ -26,7 +28,7 @@ public class ReportController {
     }
 
     @PostMapping("/{reportId}")
-    public Page<ReportDTO> getAllListReportOfUser(@PathVariable String reportId,
+    public List<ReportDTO> getAllListReportOfUser(@PathVariable String reportId,
                                                   @RequestBody PageableRequest pageable) {
         return reportService.getListReportOfUser(Integer.parseInt(reportId), pageable);
     }

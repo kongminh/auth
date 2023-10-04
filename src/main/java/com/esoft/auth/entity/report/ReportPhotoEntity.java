@@ -22,7 +22,7 @@ public class ReportPhotoEntity {
 
     private String photoName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     @JoinColumn(name = "report_id")
     private ReportEntity reportEntity;

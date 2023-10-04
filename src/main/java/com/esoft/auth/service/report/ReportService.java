@@ -18,6 +18,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,27 +53,18 @@ public class ReportService extends PrimaryBaseService {
         }
     }
 
-    public Page<ReportDTO> getListReportOfUser(int reportId, PageableRequest pageableRequest) {
+    public List<ReportDTO> getListReportOfUser(int reportId, PageableRequest pageableRequest) {
 
-        Pageable pageable = paginationWith(pageableRequest, "id");
+        Optional<List<ReportEntity>> reportEntities = reportRepository.findReportEntityById(reportId);
+        if (reportEntities.isPresent()) {
+            System.out.println(reportEntities);
+            return reportEntities
+                    .get()
+                    .stream()
+                    .map(ReportDTO::new)
+                    .collect(Collectors.toList());
+        } else return null;
 
-        Page<ReportEntity> reportEntities = reportRepository.findAll(
-                Specification.where(
-                        (root, query, criteriaBuilder) -> {
-                            Predicate predicate = criteriaBuilder.equal(root.get("id"), reportId);
-                            return predicate;
-                        }
-                ),
-                pageable
-        );
-        System.out.println(reportEntities);
-        return new PageImpl<>(
-                reportEntities
-                        .stream()
-                        .map(ReportDTO::new)
-                        .collect(Collectors.toList()),
-                pageable,
-                reportEntities.getTotalElements());
     }
 
 }
