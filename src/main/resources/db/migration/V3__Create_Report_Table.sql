@@ -1,0 +1,8 @@
+CREATE TABLE report
+(
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    content VARCHAR(500) DEFAULT NULL,
+    type    INT NOT NULL DEFAULT 0,
+    user_id INT NOT NULL NOT NULL REFERENCES user (id)
+);
+
