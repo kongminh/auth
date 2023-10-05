@@ -27,6 +27,9 @@ public class ReportService extends PrimaryBaseService {
     @Autowired
     private ReportRepository reportRepository;
 
+    @Autowired
+    private ReportPhotoService reportPhotoService;
+
     public boolean createReportByUserId(ReportDTO reportDTO, UserEntity userEntity) {
 
         if (reportRepository.existsReportEntitiesByTitle(reportDTO.getTitle()))
@@ -37,15 +40,14 @@ public class ReportService extends PrimaryBaseService {
             reportEntity.setContent(reportDTO.getContent());
             reportEntity.setType(reportDTO.getType());
             reportEntity.setUserEntity(userEntity);
-            if (reportDTO.getReports() != null)
-                reportEntity.setReportPhotos(reportDTO.getReports()
-                        .stream()
-                        .map(it -> {
-                            ReportPhotoEntity report = new ReportPhotoEntity();
-                            report.setId(it.getId());
-                            report.setPhotoName(it.getPhotoName());
-                            return report;
-                        }).collect(Collectors.toList()));
+            reportEntity.setReportPhotos(reportDTO.getReports() != null ? reportDTO.getReports()
+                    .stream()
+                    .map(it -> {
+                        ReportPhotoEntity report = new ReportPhotoEntity();
+                        report.setId(it.getId());
+                        report.setPhotoName(it.getPhotoName());
+                        return report;
+                    }).collect(Collectors.toList()) : null);
 
             reportRepository.save(reportEntity);
 
@@ -53,17 +55,14 @@ public class ReportService extends PrimaryBaseService {
         }
     }
 
-    public List<ReportDTO> getListReportOfUser(int reportId, PageableRequest pageableRequest) {
+    public List<ReportDTO> getListReportOfUser(Long reportId, PageableRequest pageableRequest) {
+        Optional<List<ReportEntity>> reportEntities = reportRepository.findReportEntityByUserId(reportId);
 
-        Optional<List<ReportEntity>> reportEntities = reportRepository.findReportEntityById(reportId);
-        if (reportEntities.isPresent()) {
-            System.out.println(reportEntities);
-            return reportEntities
-                    .get()
-                    .stream()
-                    .map(ReportDTO::new)
-                    .collect(Collectors.toList());
-        } else return null;
+        return reportEntities.map(entities -> entities
+                .stream()
+                .map(ReportDTO::new)
+                .collect(Collectors.toList()))
+                .orElse(null);
 
     }
 

@@ -30,6 +30,6 @@ public class ReportController {
     @PostMapping("/{reportId}")
     public List<ReportDTO> getAllListReportOfUser(@PathVariable String reportId,
                                                   @RequestBody PageableRequest pageable) {
-        return reportService.getListReportOfUser(Integer.parseInt(reportId), pageable);
+        return reportService.getListReportOfUser(Long.parseLong(reportId), pageable);
     }
 }

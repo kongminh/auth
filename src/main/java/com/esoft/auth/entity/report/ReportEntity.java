@@ -5,9 +5,10 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
-@Entity()
+@Entity
 @Table(name = "report")
 @Data
 @AllArgsConstructor
@@ -16,7 +17,7 @@ import java.util.List;
         callSuper = true,
         exclude = {"userEntity", "reportPhotos"})
 @EqualsAndHashCode(of = "id", callSuper = false)
-public class ReportEntity {
+public class ReportEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

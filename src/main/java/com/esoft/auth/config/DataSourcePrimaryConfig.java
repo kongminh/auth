@@ -96,6 +96,15 @@ public class DataSourcePrimaryConfig {
 //    properties.setProperty(
 //        "hibernate.implicit_naming_strategy",
 //        getValue(env, "spring.jpa.hibernate.implicit_naming_strategy"));
+    properties.setProperty(
+        "hibernate.physical_naming_strategy",
+        getValue(env, "spring.jpa.hibernate.naming.physical-strategy"));
+    properties.setProperty(
+            "hibernate.implicit_naming_strategy",
+            getValue(env, "spring.jpa.hibernate.naming.implicit-strategy"));
+    properties.setProperty(
+            "spring.jpa.show-sql",
+            getValue(env, "spring.jpa.show-sql"));
 //    properties.setProperty(
 //        "hibernate.connection.handling_mode",
 //        getValue(env, "spring.jpa.hibernate.connection.handling_mode"));

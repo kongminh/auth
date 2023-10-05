@@ -1,11 +1,12 @@
 package com.esoft.auth.entity.report;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.persistence.*;
 
-@Entity()
+@Entity
 @Table(name = "report_photo")
 @Data
 @AllArgsConstructor
@@ -20,6 +21,7 @@ public class ReportPhotoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+ //   @Column(name = "photo_name")
     private String photoName;
 
     @ManyToOne(fetch = FetchType.EAGER)
