@@ -39,10 +39,7 @@ public class UserService extends PrimaryBaseService {
     org.springframework.security.core.Authentication auth =
             SecurityContextHolder.getContext().getAuthentication();
     Optional<UserEntity> userEntityOpt = userRepository.findByUsername(auth.getName());
-    if (!userEntityOpt.isPresent()) {
-      return null;
-    }
-    return new UserDTO(userEntityOpt.get());
+    return userEntityOpt.map(UserDTO::new).orElse(null);
   }
 
   public List<UserDTO> getAllUsers() {

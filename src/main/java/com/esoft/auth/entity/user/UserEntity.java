@@ -1,7 +1,11 @@
 package com.esoft.auth.entity.user;
 
+import com.esoft.auth.entity.chat.ConversationEntity;
+import com.esoft.auth.entity.chat.MessageEntity;
 import com.esoft.auth.entity.report.ReportEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -37,6 +41,16 @@ public class UserEntity {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userEntity",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<ReportEntity> reports;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<MessageEntity> messages;
+
+    @ManyToMany(mappedBy = "userEntity")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<ConversationEntity> conversationEntities;
 }
